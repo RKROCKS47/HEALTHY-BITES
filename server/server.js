@@ -12,6 +12,18 @@ const reviewRoutes = require("./src/routes/reviewRoutes");
 const adminOrderRoutes = require("./src/routes/adminOrderRoutes");
 const adminProductRoutes = require("./src/routes/adminProductRoutes");
 const productRoutes = require("./src/routes/productRoutes");
+const db = require("./src/config/db");
+
+app.get("/api/db-ping", (req, res) => {
+  db.getConnection((err, conn) => {
+    if (err) return res.status(500).json({ ok: false, error: err.message, code: err.code });
+    conn.ping((pingErr) => {
+      conn.release();
+      if (pingErr) return res.status(500).json({ ok: false, error: pingErr.message, code: pingErr.code });
+      res.json({ ok: true });
+    });
+  });
+});
 
 const app = express();
 
