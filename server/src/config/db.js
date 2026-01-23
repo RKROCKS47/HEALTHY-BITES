@@ -8,12 +8,11 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "healthy_bites",
-
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 
-  // ✅ Aiven requires TLS. This works reliably on managed MySQL.
+  // Aiven requires TLS
   ssl: isProd ? { rejectUnauthorized: false } : undefined,
 });
 
