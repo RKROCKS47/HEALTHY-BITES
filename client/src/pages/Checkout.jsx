@@ -1,6 +1,7 @@
 import Navbar from "../components/common/Navbar";
 import { useCart } from "../context/CartContext";
 import { useEffect, useMemo, useState } from "react";
+import { API_BASE } from "../utils/apiBase";
 
 export default function Checkout() {
   const { items, totals, clearCart } = useCart();
@@ -53,7 +54,7 @@ export default function Checkout() {
       const API_BASE = import.meta.env.VITE_API_BASE;  const res = await fetch(`${API_BASE}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        body: JSON.stringify(payload){
           customer: form,
           items,
           totals,
