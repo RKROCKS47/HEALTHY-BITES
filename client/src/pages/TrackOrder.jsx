@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { API_BASE } from "../utils/apiBase";
 import Navbar from "../components/common/Navbar";
-
 export default function TrackOrder() {
   const [orderId, setOrderId] = useState("");
   const [order, setOrder] = useState(null);
@@ -15,9 +15,7 @@ export default function TrackOrder() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        const API_BASE = import.meta.env.VITE_API_BASE;  `${API_BASE}/api/orders/track/${orderId.trim()}`
-      );
+      const res = await fetch(`${API_BASE}/api/orders/track/${orderId.trim()}`);
 
       const text = await res.text();        // ✅ read raw first
       const data = text ? JSON.parse(text) : {}; // ✅ parse safely
@@ -45,7 +43,7 @@ export default function TrackOrder() {
   useEffect(() => {
     if (!order?.orderCode) return;
 
-    const API_BASE = import.meta.env.VITE_API_BASE;  // socket.io expects origin only (no /api) const socket = io(API_BASE, { transports: ["websocket"] });
+   const socket = io(API_BASE, { transports: ["websocket"] }); // ✅ no localhost 
     socket.emit("joinOrder", order.orderCode);
 
     socket.on("order:status_updated", (payload) => {
