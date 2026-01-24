@@ -45,7 +45,7 @@ export default function TrackOrder() {
   useEffect(() => {
     if (!order?.orderCode) return;
 
-    const socket = io("http://localhost:5000");
+    const API_BASE = import.meta.env.VITE_API_BASE;  // socket.io expects origin only (no /api) const socket = io(API_BASE, { transports: ["websocket"] });
     socket.emit("joinOrder", order.orderCode);
 
     socket.on("order:status_updated", (payload) => {
