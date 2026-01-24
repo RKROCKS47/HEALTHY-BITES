@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/common/Navbar";
 
 const CATEGORIES = ["Veg", "Non-Veg", "Vegan", "Lactose-Free"];
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+const API = import.meta.env.VITE_API_BASE;
 
 export default function AdminProducts() {
   const navigate = useNavigate();
-  const adminKey = localStorage.getItem("HB_ADMIN_KEY") || "";
+  const adminKey = localStorage.getItem("ADMIN_KEY");
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,10 +34,10 @@ export default function AdminProducts() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/admin/products`, {
-        headers: { "x-admin-key": adminKey },
-      });
-      const data = await res.json();
+      const res = await fetch(`${API}/api/admin/products`, {
+  headers: { "x-admin-key": adminKey },
+});
+const data = await res.json();
 
       if (!res.ok) {
         alert(data.message || "Failed to load products");
