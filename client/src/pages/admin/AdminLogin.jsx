@@ -44,7 +44,7 @@ export default function AdminLogin() {
           </form>
 
           <div style={{ marginTop: 10, fontSize: 12, color: "#777" }}>
-            Tip: If you get unauthorized, your Render <b>ADMIN_KEY</b> must match.
+            Tip: If you get unauthorized ask owner <b>ADMIN_KEY</b> must match.
           </div>
         </div>
       </div>
