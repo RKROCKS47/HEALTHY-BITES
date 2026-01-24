@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const STATUSES = ["RECEIVED", "PREPARING", "PICKED", "DISPATCHED", "ARRIVED"];
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
-
+const API = import.meta.env.VITE_API_BASE;
 
 export default function AdminOrders() {
     const [orders, setOrders] = useState([]);
@@ -21,15 +20,15 @@ export default function AdminOrders() {
         cursor: "pointer",
     };
 
-    const adminKey = localStorage.getItem("HB_ADMIN_KEY") || "";
+ const adminKey = localStorage.getItem("ADMIN_KEY");
 
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${API_BASE}/api/admin/orders`, {
-                headers: { "x-admin-key": adminKey },
-            });
-            const data = await res.json();
+            const res = await fetch(`${API}/api/admin/orders`, {
+  headers: { "x-admin-key": adminKey },
+});
+const data = await res.json();
 
             if (!res.ok) {
                 alert(data.message || "Unauthorized");
