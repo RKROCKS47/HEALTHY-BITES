@@ -2,11 +2,20 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 
+function getBaseUrl(req) {
+  // Render/Cloudflare sends x-forwarded-proto = https
+  const proto = (req.headers["x-forwarded-proto"] || "https")
+    .split(",")[0]
+    .trim();
+  return `${proto}://${req.get("host")}`;
+}
+
 function withImageUrl(req, row) {
   const r = { ...row };
+  const baseUrl = getBaseUrl(req);
 
   if (r.image && typeof r.image === "string" && r.image.startsWith("/uploads/")) {
-    r.image_url = `${req.protocol}://${req.get("host")}${r.image}`;
+    r.image_url = `${baseUrl}${r.image}`; // ✅ always https on Render
   } else {
     r.image_url = r.image || null;
   }
