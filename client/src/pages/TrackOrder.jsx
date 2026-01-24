@@ -16,7 +16,7 @@ export default function TrackOrder() {
     setError("");
     try {
       const res = await fetch(
-        `http://localhost:5000/api/orders/track/${orderId.trim()}`
+        const API_BASE = import.meta.env.VITE_API_BASE;  `${API_BASE}/api/orders/track/${orderId.trim()}`
       );
 
       const text = await res.text();        // ✅ read raw first
