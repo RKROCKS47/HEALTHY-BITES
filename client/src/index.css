@@ -2,11 +2,11 @@
 
 /* ===== Base ===== */
 :root {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  /* ✅ DO NOT force dark theme here */
   color: #111;
   background: #f7f7f7;
 
@@ -19,6 +19,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -26,8 +31,16 @@ body {
   background: #f7f7f7;
   color: #111;
 
-  /* ✅ important: remove flex center */
+  /* ✅ IMPORTANT: no Vite flex centering */
   display: block;
+}
+
+/* ✅ IMPORTANT: override Vite template if it exists */
+#root {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left; /* ✅ this fixes stacking in menu cards */
 }
 
 /* links */
@@ -41,7 +54,7 @@ button {
   font-family: inherit;
 }
 
-/* ===== Toast (single definition) ===== */
+/* ===== Toast ===== */
 .toast {
   position: fixed;
   bottom: 22px;
@@ -69,7 +82,7 @@ button {
   }
 }
 
-/* ===== Qty Controls (single definition) ===== */
+/* ===== CART Qty Controls (used in Cart page) ===== */
 .qtyWrap {
   display: flex;
   align-items: center;
@@ -80,7 +93,7 @@ button {
 .qtyBtn {
   width: 38px;
   height: 38px;
-  border-radius: 999px; /* ✅ round */
+  border-radius: 999px;
   border: 1px solid #ddd;
   background: #fff;
   font-weight: 900;
@@ -102,7 +115,49 @@ button {
   font-size: 15px;
 }
 
-/* ===== Skeleton Loader (single definition) ===== */
+/* ===== MENU Qty Controls (used ONLY in Menu page) ===== */
+/* ✅ This is the real fix for the screenshot: forces horizontal row */
+.menuQty {
+  margin-top: 12px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+}
+
+.menuQtyBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-weight: 900;
+  font-size: 18px;
+  cursor: pointer;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.menuQtyBtn:active {
+  transform: scale(0.95);
+}
+
+.menuQtyCount {
+  min-width: 26px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 15px;
+
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
+/* ===== Skeleton Loader ===== */
 .skeleton-img {
   height: 160px;
   border-radius: 14px 14px 0 0;
@@ -156,17 +211,23 @@ button {
   }
 }
 
-.w40 { width: 40%; }
-.w70 { width: 70%; }
-.w90 { width: 90%; }
+.w40 {
+  width: 40%;
+}
+.w70 {
+  width: 70%;
+}
+.w90 {
+  width: 90%;
+}
 
-/* ===== Optional: Card/Image helpers (safe) ===== */
+/* ===== Card/Image helpers ===== */
 .card {
   background: #fff;
   border: 1px solid #eee;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .card-img {
@@ -180,8 +241,10 @@ button {
   padding: 14px;
 }
 
-/* ===== Optional: Input basics ===== */
-.input, .textarea, select {
+/* ===== Input basics ===== */
+.input,
+.textarea,
+select {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
