@@ -192,3 +192,61 @@ a { color: inherit; text-decoration: none; }
   font-weight: 900;
   line-height: 1;
 }
+/* ================= MENU STEPPER - HARD OVERRIDE FIX ================= */
+/* This will override ANY global button styles and stop vertical stacking */
+
+.hbStepper{
+  margin-top: 14px !important;
+  display: inline-flex !important;         /* ✅ never becomes column */
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+
+  height: 36px !important;
+  min-width: 92px !important;
+
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+
+  background: #2ecc71 !important;
+  border: 1px solid #2ecc71 !important;
+  color: #fff !important;
+
+  white-space: nowrap !important;          /* ✅ prevents wrapping */
+  flex-wrap: nowrap !important;
+}
+
+.hbStepBtn{
+  all: unset !important;                   /* ✅ kills boxy global button styles */
+  cursor: pointer !important;
+
+  width: 28px !important;
+  height: 28px !important;
+
+  display: inline-flex !important;         /* ✅ never block/100% width */
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 auto !important;               /* ✅ prevents stretch */
+  line-height: 1 !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  user-select: none !important;
+}
+
+.hbStepBtn:active{
+  transform: scale(0.92) !important;
+}
+
+.hbStepCount{
+  all: unset !important;
+  display: inline-block !important;
+  min-width: 18px !important;
+  text-align: center !important;
+  font-weight: 900 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  color: #fff !important;
+}
