@@ -9,32 +9,50 @@ const CATEGORIES = ["All", "Veg", "Non-Veg", "Vegan", "Lactose-Free"];
 function resolveImg(raw) {
   if (!raw) return "/assets/images/salad1.png";
   if (raw.startsWith("/uploads")) return `${API_BASE}${raw}`;
-  return raw; // full URL (cloudinary or absolute)
+  return raw; // full URL (Cloudinary / absolute)
+}
+
+/* ✅ Skeleton card */
+function MenuSkeletonCard() {
+  return (
+    <div className="card">
+      <div className="skeleton skeleton-img" />
+      <div className="card-body">
+        <div className="skeleton skeleton-text long" />
+        <div className="skeleton skeleton-text short" />
+        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+          <div className="skeleton skeleton-chip" />
+          <div className="skeleton skeleton-chip" />
+        </div>
+        <div className="skeleton skeleton-btn" />
+      </div>
+    </div>
+  );
 }
 
 export default function Menu() {
+  // ✅ Use ONLY ONCE
   const { items, addToCart, updateQty, removeFromCart } = useCart();
 
   const [products, setProducts] = useState([]);
   const [active, setActive] = useState("All");
   const [loading, setLoading] = useState(true);
 
-  // toast popup
+  // ⭐ rating stats
+  const [ratingStats, setRatingStats] = useState({
+    avgRating: 0,
+    totalReviews: 0,
+  });
+
+  // ✅ toast
   const [toast, setToast] = useState("");
   const showToast = (msg) => {
     setToast(msg);
-    window.clearTimeout(window.__hbToastTimer);
-    window.__hbToastTimer = window.setTimeout(() => setToast(""), 1400);
+    window.clearTimeout(window.__hb_toast_timer);
+    window.__hb_toast_timer = window.setTimeout(() => setToast(""), 1500);
   };
 
-  // quick lookup of cart qty by product id
-  const cartMap = useMemo(() => {
-    const m = new Map();
-    (items || []).forEach((x) => m.set(x.id, x));
-    return m;
-  }, [items]);
-
-  // fetch products
+  // ✅ fetch products
   useEffect(() => {
     setLoading(true);
     fetch(`${API_BASE}/api/products`)
@@ -44,35 +62,54 @@ export default function Menu() {
       .finally(() => setLoading(false));
   }, []);
 
+  // ✅ rating stats
+  useEffect(() => {
+    fetch(`${API_BASE}/api/reviews/stats/average`)
+      .then((r) => r.json())
+      .then((d) =>
+        setRatingStats({
+          avgRating: Number(d?.avgRating || 0),
+          totalReviews: Number(d?.totalReviews || 0),
+        })
+      )
+      .catch(() => {});
+  }, []);
+
   const filtered = useMemo(() => {
     if (active === "All") return products;
     return products.filter((p) => p.category === active);
   }, [active, products]);
 
-  const inc = (p) => {
-    const cartItem = cartMap.get(p.id);
-    const imgSrc = resolveImg(p.image_url || p.image || "");
+  // ✅ qty in cart by productId
+  const getQty = (productId) => {
+    const found = (items || []).find((x) => Number(x.id) === Number(productId));
+    return found ? Number(found.qty || 0) : 0;
+  };
 
-    if (!cartItem) {
-      addToCart({
-        id: p.id,
-        name: p.name,
-        price: p.price,
-        image: imgSrc,
-      });
+  const inc = (p) => {
+    const soldOut = p.sold_out ?? Number(p.stock_qty || 0) <= 0;
+    if (soldOut) return;
+
+    const imgSrc = resolveImg(p.image_url || p.image || "");
+    const qty = getQty(p.id);
+
+    if (qty === 0) {
+      addToCart({ id: p.id, name: p.name, price: p.price, image: imgSrc });
       showToast("Item added ✅");
-    } else {
-      updateQty(p.id, Number(cartItem.qty || 0) + 1);
-      showToast("Quantity updated ✅");
+      return;
     }
+
+    updateQty(p.id, qty + 1);
+    showToast("+1 ✅");
   };
 
   const dec = (p) => {
-    const cartItem = cartMap.get(p.id);
-    if (!cartItem) return;
+    const qty = getQty(p.id);
+    if (qty <= 0) return;
 
-    const next = Number(cartItem.qty || 0) - 1;
+    const next = qty - 1;
 
+    // ✅ if 0 then remove from cart
     if (next <= 0) {
       removeFromCart(p.id);
       showToast("Item removed ✅");
@@ -80,12 +117,33 @@ export default function Menu() {
     }
 
     updateQty(p.id, next);
-    showToast("Quantity updated ✅");
+    showToast("-1 ✅");
   };
 
   return (
     <>
       <Navbar />
+
+      {/* ✅ Toast popup */}
+      {toast ? (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 18,
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "#111",
+            color: "#fff",
+            padding: "10px 14px",
+            borderRadius: 999,
+            fontWeight: 900,
+            zIndex: 9999,
+            boxShadow: "0 10px 25px rgba(0,0,0,0.25)",
+          }}
+        >
+          {toast}
+        </div>
+      ) : null}
 
       <div className="container">
         <h2 style={{ margin: 0 }}>Menu</h2>
@@ -100,6 +158,8 @@ export default function Menu() {
               key={c}
               onClick={() => setActive(c)}
               className={active === c ? "tab active" : "tab"}
+              disabled={loading}
+              style={loading ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
               type="button"
             >
               {c}
@@ -107,29 +167,19 @@ export default function Menu() {
           ))}
         </div>
 
-        {/* Skeleton Loading */}
-        {loading ? (
-          <div className="grid">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="card">
-                <div className="skeleton-img" />
-                <div className="card-body">
-                  <div className="skeleton-line w70" />
-                  <div className="skeleton-line w40" />
-                  <div className="skeleton-line w90" />
-                  <div className="skeleton-btn" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid">
-            {filtered.map((p) => {
-              const soldOut = p.sold_out ?? (Number(p.stock_qty || 0) <= 0);
+        {/* ✅ Products OR Skeleton */}
+        <div className="grid">
+          {loading ? (
+            Array.from({ length: 8 }).map((_, i) => <MenuSkeletonCard key={i} />)
+          ) : filtered.length === 0 ? (
+            <div className="card" style={{ padding: 16 }}>
+              No items found.
+            </div>
+          ) : (
+            filtered.map((p) => {
+              const soldOut = p.sold_out ?? Number(p.stock_qty || 0) <= 0;
               const imgSrc = resolveImg(p.image_url || p.image || "");
-
-              const cartItem = cartMap.get(p.id);
-              const qty = Number(cartItem?.qty || 0);
+              const qty = getQty(p.id);
 
               return (
                 <div key={p.id} className="card">
@@ -138,88 +188,78 @@ export default function Menu() {
                     alt={p.name}
                     className="card-img"
                     loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = "/assets/images/salad1.png";
-                    }}
+                    onError={(e) => (e.currentTarget.src = "/assets/images/salad1.png")}
                   />
 
                   <div className="card-body">
-                    {/* Name + Price */}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                    >
-                      <h3 style={{ margin: 0 }}>{p.name}</h3>
+                    <div className="row">
+                      <h3>{p.name}</h3>
                       <strong>₹{p.price}</strong>
                     </div>
 
-                    {/* Category + Tags */}
-                    <div className="chips" style={{ marginTop: 8 }}>
+                    {/* ⭐ Rating */}
+                    {ratingStats.totalReviews > 0 ? (
+                      <div className="rating">
+                        ★ {ratingStats.avgRating}
+                        <span>({ratingStats.totalReviews})</span>
+                      </div>
+                    ) : (
+                      <div className="rating muted">⭐ New</div>
+                    )}
+
+                    <div className="chips">
                       <span className="chip">{p.category}</span>
                       {p.tags && <span className="chip">{p.tags}</span>}
                       {soldOut && <span className="chip danger">Sold Out</span>}
                     </div>
 
-                    {/* ✅ Stepper (uses your hbStepper CSS) */}
+                    {/* ✅ Add to cart OR qty controls (same style area) */}
                     {soldOut ? (
-                      <button
-                        className="btn disabled"
-                        disabled
-                        style={{ marginTop: 12 }}
-                        type="button"
-                      >
+                      <button className="btn disabled" disabled type="button">
                         Not Available
                       </button>
                     ) : qty > 0 ? (
                       <div
-                        className="hbStepper"
-                        role="group"
-                        aria-label="Quantity controls"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: 12,
+                          marginTop: 10,
+                        }}
                       >
                         <button
-                          type="button"
-                          className="hbStepBtn"
+                          className="btn"
+                          style={{ width: 46, background: "#111" }}
                           onClick={() => dec(p)}
-                          aria-label="Decrease quantity"
+                          type="button"
                         >
                           −
                         </button>
 
-                        <span className="hbStepCount">{qty}</span>
+                        <div style={{ fontWeight: 900, fontSize: 16 }}>{qty}</div>
 
                         <button
-                          type="button"
-                          className="hbStepBtn"
+                          className="btn"
+                          style={{ width: 46 }}
                           onClick={() => inc(p)}
-                          aria-label="Increase quantity"
+                          type="button"
                         >
                           +
                         </button>
                       </div>
                     ) : (
-                      <button
-                        className="btn"
-                        onClick={() => inc(p)}
-                        style={{ marginTop: 12 }}
-                        type="button"
-                      >
+                      <button className="btn" onClick={() => inc(p)} type="button">
                         Add to Cart
                       </button>
                     )}
                   </div>
                 </div>
               );
-            })}
-          </div>
-        )}
+            })
+          )}
+        </div>
       </div>
-
-      {/* Toast Popup */}
-      {toast && <div className="toast">{toast}</div>}
     </>
   );
 }
