@@ -2,8 +2,22 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminFetch } from "../../utils/adminFetch";
 import Navbar from "../../components/common/Navbar";
+import { API_BASE } from "../../utils/apiBase";
 
 const STATUSES = ["RECEIVED", "PREPARING", "PICKED", "DISPATCHED", "ARRIVED"];
+
+function resolveImg(raw) {
+  if (!raw) return "/assets/images/salad1.png";
+  if (typeof raw !== "string") return "/assets/images/salad1.png";
+
+  // cloudinary / any full url
+  if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
+
+  // old render uploads (relative path stored in DB)
+  if (raw.startsWith("/uploads")) return `${API_BASE}${raw}`;
+
+  return raw; // best effort
+}
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -72,9 +86,7 @@ export default function AdminOrders() {
       if (!res.ok) return alert(data.message || "Update failed");
 
       setOrders((prev) =>
-        prev.map((o) =>
-          o.order_code === orderCode ? { ...o, status } : o
-        )
+        prev.map((o) => (o.order_code === orderCode ? { ...o, status } : o))
       );
     } catch {
       alert("Update failed (server issue)");
@@ -91,11 +103,20 @@ export default function AdminOrders() {
       <Navbar />
 
       <div style={{ padding: 16, maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
           <h2 style={{ margin: 0 }}>Admin Orders</h2>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button onClick={fetchOrders} style={btn}>Refresh 🔄</button>
+            <button onClick={fetchOrders} style={btn}>
+              Refresh 🔄
+            </button>
 
             <button
               onClick={() => {
@@ -117,7 +138,14 @@ export default function AdminOrders() {
           <div style={{ display: "grid", gap: 12, marginTop: 14 }}>
             {orders.map((o) => (
               <div key={o.order_code} style={card}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 10,
+                    flexWrap: "wrap",
+                  }}
+                >
                   <div>
                     <div style={{ fontWeight: 900 }}>
                       Order: {o.order_code} • ₹{o.total_amount}
@@ -127,10 +155,8 @@ export default function AdminOrders() {
                       {o.customer_name} • {o.phone}
                     </div>
 
-                    {/* ✅ FULL ADDRESS (fix) */}
                     <div style={{ color: "#555", marginTop: 4, fontSize: 13 }}>
-                      <b>Address:</b>{" "}
-                      {o.address ? o.address : "-"}
+                      <b>Address:</b> {o.address ? o.address : "-"}
                       {o.city ? `, ${o.city}` : ""}
                       {o.pincode ? ` - ${o.pincode}` : ""}
                     </div>
@@ -176,17 +202,39 @@ export default function AdminOrders() {
                       <p style={{ margin: 0, color: "#777" }}>No items found.</p>
                     ) : (
                       <div style={{ display: "grid", gap: 10 }}>
-                        {orderItems.map((it) => (
-                          <div key={it.id} style={itemRow}>
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontWeight: 900, fontSize: 13 }}>{it.name}</div>
-                              <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
-                                ₹{it.price} × {it.qty}
+                        {orderItems.map((it) => {
+                          const imgSrc = resolveImg(it.image);
+
+                          return (
+                            <div key={it.id} style={itemRow}>
+                              {/* ✅ IMAGE RESTORED */}
+                              <img
+                                src={imgSrc}
+                                alt={it.name}
+                                style={{
+                                  width: 54,
+                                  height: 44,
+                                  borderRadius: 10,
+                                  objectFit: "cover",
+                                  background: "#fff",
+                                  border: "1px solid #eee",
+                                }}
+                                onError={(e) => {
+                                  e.currentTarget.src = "/assets/images/salad1.png";
+                                }}
+                              />
+
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: 900, fontSize: 13 }}>{it.name}</div>
+                                <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
+                                  ₹{it.price} × {it.qty}
+                                </div>
                               </div>
+
+                              <div style={{ fontWeight: 900 }}>₹{it.price * it.qty}</div>
                             </div>
-                            <div style={{ fontWeight: 900 }}>₹{it.price * it.qty}</div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
