@@ -23,7 +23,8 @@ export default function Menu() {
   const [toast, setToast] = useState("");
   const showToast = (msg) => {
     setToast(msg);
-    setTimeout(() => setToast(""), 1500);
+    window.clearTimeout(window.__hbToastTimer);
+    window.__hbToastTimer = window.setTimeout(() => setToast(""), 1500);
   };
 
   // quick lookup of cart qty by product id
@@ -140,7 +141,7 @@ export default function Menu() {
                   />
 
                   <div className="card-body">
-                    {/* ✅ FIXED ORDER: Name + Price (no duplicate) */}
+                    {/* ✅ Name + Price */}
                     <div
                       style={{
                         display: "flex",
@@ -160,25 +161,41 @@ export default function Menu() {
                       {soldOut && <span className="chip danger">Sold Out</span>}
                     </div>
 
-                    {/* ✅ Round Qty controls like cart style */}
+                    {/* ✅ FIXED: Menu qty always horizontal */}
                     {soldOut ? (
-                      <button className="btn disabled" disabled style={{ marginTop: 12 }}>
+                      <button
+                        className="btn disabled"
+                        disabled
+                        style={{ marginTop: 12 }}
+                      >
                         Not Available
                       </button>
                     ) : qty > 0 ? (
-                      <div className="qtyWrap">
-                        <button className="qtyBtn" onClick={() => dec(p)}>
+                      <div className="menuQty">
+                        <button
+                          type="button"
+                          className="menuQtyBtn"
+                          onClick={() => dec(p)}
+                        >
                           −
                         </button>
 
-                        <div className="qtyCount">{qty}</div>
+                        <span className="menuQtyCount">{qty}</span>
 
-                        <button className="qtyBtn" onClick={() => inc(p)}>
+                        <button
+                          type="button"
+                          className="menuQtyBtn"
+                          onClick={() => inc(p)}
+                        >
                           +
                         </button>
                       </div>
                     ) : (
-                      <button className="btn" onClick={() => inc(p)} style={{ marginTop: 12 }}>
+                      <button
+                        className="btn"
+                        onClick={() => inc(p)}
+                        style={{ marginTop: 12 }}
+                      >
                         Add to Cart
                       </button>
                     )}
