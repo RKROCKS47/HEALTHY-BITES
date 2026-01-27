@@ -57,9 +57,9 @@ export default function Cart() {
               fontWeight: 800,
             }}
           >
-            {totals.subtotal >= 299
+            {totals.subtotal >= 150
               ? "✅ Free delivery unlocked!"
-              : `🚚 Add ₹${299 - totals.subtotal} more to get FREE delivery`}
+              : `🚚 Add ₹${150 - totals.subtotal} more to get FREE delivery`}
           </div>
         )}
 
