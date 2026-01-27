@@ -1,157 +1,120 @@
-🥗 Healthy Bites — Full-Stack Food Ordering Platform
+# 🥗 Healthy Bites — Full-Stack Food Ordering Platform
 
-Healthy Bites is a production-ready full-stack food ordering web application built using React, Node.js, Express, and MySQL.
-The project demonstrates real-world engineering skills including state management, performance optimization, image handling, and admin workflows.
+Healthy Bites is a production-ready full-stack food ordering web application built using React, Node.js, Express, and MySQL.  
+It simulates a real-world food-tech platform (Swiggy / Zomato style) and demonstrates practical engineering skills including state management, image handling, performance optimization, and admin workflows.
 
-🔍 Why This Project Matters
+## 🔍 Why This Project Matters
 
-This is not a tutorial app.
-It simulates how a real food-tech platform (Swiggy / Zomato style) works, focusing on:
+This is not a tutorial or demo app.  
+It mirrors how real food-delivery platforms work, focusing on:
 
-Scalable frontend architecture
+- Scalable frontend architecture
+- Clean REST-based API design
+- Database-driven UI
+- Real customer and admin workflows
+- Performance and UX optimization
 
-Clean API design
+## 🧩 Key Features
 
-Database-driven UI
+### Customer Side
+- Category-based product listing
+- Skeleton loaders for slow networks
+- Add-to-cart with dynamic quantity controls
+- Cart persistence using Context API
+- Toast notifications for UX feedback
+- Stock-based Sold Out handling
+- Fully responsive, mobile-first UI
 
-Real user/admin workflows
+### Cart & Order Flow
+- Centralized cart state management
+- Increment / decrement quantity logic
+- Automatic price calculation (subtotal, delivery, total)
+- Ready for payment gateway integration
 
-Performance & UX optimization
+### Admin Panel
+- Secure admin access (key-based)
+- Product CRUD (Add / Edit / Delete)
+- Image upload support
+- Inventory and stock control
+- Order visibility and management
 
-🧩 Key Functionalities
-Customer Side
+## 🛠️ Tech Stack
 
-Category-based product listing
+### Frontend
+- React (Vite)
+- Context API
+- Modular component architecture
+- Custom skeleton loaders
+- Lazy-loaded images
+- Clean CSS (no UI frameworks)
 
-Skeleton loaders for slow networks
+### Backend
+- Node.js
+- Express.js
+- REST-based API architecture
+- Image upload handling (Multer, Cloudinary-ready)
 
-Add-to-cart with dynamic quantity controls
+### Database
+- MySQL
+- Relational schema for products and orders
 
-Cart persistence using Context API
+## 🧠 Engineering Highlights
 
-Toast notifications for UX feedback
+- Fixed image loss on server restarts using absolute image URLs
+- Improved perceived performance with skeleton loaders
+- Built reusable cart logic inspired by real food-delivery apps
+- Graceful handling of slow API responses
+- Clean separation of UI, logic, API, and database layers
 
-Stock-based sold-out handling
-
-Responsive UI (mobile-first)
-
-Cart & Order Flow
-
-Centralized cart state
-
-Increment / decrement quantity logic
-
-Price calculation (subtotal, delivery, total)
-
-Ready for payment integration
-
-Admin Side
-
-Secure admin access
-
-Product CRUD (Add / Edit / Delete)
-
-Image upload support
-
-Inventory & stock control
-
-Order visibility & management
-
-🛠️ Tech Stack
-Frontend
-
-React (Vite)
-
-Context API for global state
-
-Modular component architecture
-
-Custom skeleton loaders
-
-Lazy-loaded images
-
-Clean CSS (no UI frameworks)
-
-Backend
-
-Node.js
-
-Express.js
-
-REST-based API design
-
-Image upload handling (Multer / Cloudinary-ready)
-
-Database
-
-MySQL
-
-Relational schema for products & orders
-
-🧠 Engineering Highlights
-
-Solved image loss issue on server restarts by moving to absolute image URLs
-
-Implemented skeleton loading to improve perceived performance
-
-Built reusable cart logic similar to real food-delivery apps
-
-Handled slow API responses gracefully
-
-Clean separation of concerns (UI, logic, API, DB)
-
-📁 Architecture Overview
-Frontend (React)
- ├─ Pages (Menu, Cart, Checkout, Admin)
- ├─ Components (Navbar, Cards, Loaders)
- ├─ Context (Cart State)
- └─ Utils (API helpers)
+## 📁 Architecture Overview
+├─ Pages (Menu, Cart, Checkout, Admin)
+├─ Components (Navbar, Cards, Loaders)
+├─ Context (Cart State)
+└─ Utils (API helpers)
 
 Backend (Node + Express)
- ├─ Routes
- ├─ Controllers
- ├─ DB Connection
- └─ Image Handling
+├─ Routes
+├─ Controllers
+├─ Database Connection
+└─ Image Handling
 
-⚙️ Setup (Local)
-# Backend
+## ⚙️ Local Setup
+
+Backend -
 cd server
 npm install
 npm run dev
 
-# Frontend
+Frontend -
 cd client
 npm install
 npm run dev
 
-🚀 Deployment
+## 🚀 Deployment
 
-Frontend: Netlify / Vercel (ready)
+- Frontend: Netlify / Vercel
+- Backend: Render (free tier tested)
+- Database: MySQL
 
-Backend: Render (free tier tested)
+## 🎯 What This Project Demonstrates
 
-Database: MySQL
+- Full-stack development capability
+- Real-world problem-solving skills
+- UX and performance awareness
+- Production-level architectural thinking
+- Clean, maintainable code
 
-🎯 What This Project Demonstrates
+## 👤 Author
 
-Full-stack development capability
+Rohit Ingale  
+Full-Stack Developer (React | Node.js | MySQL)
 
-Real-world problem solving
+GitHub: https://github.com/RKROCKS47
 
-UX + performance awareness
+## ⭐ Recruiter Note
 
-Production-level thinking
+This project reflects how I build real applications, not demos.  
+My focus is on usability, performance, and clean architecture.
 
-Clean, maintainable code
 
-👤 Author
-
-Rohit Ingale
-Full-Stack Developer (React | Node | MySQL)
-
-🔗 GitHub: https://github.com/RKROCKS47
-
-⭐ Recruiter Note
-
-This project reflects how I build real applications, not demos.
-I focus on usability, performance, and clean architecture.
+Frontend (React)
