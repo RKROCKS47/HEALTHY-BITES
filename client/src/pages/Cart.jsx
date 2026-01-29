@@ -62,8 +62,7 @@ export default function Cart() {
       ) : (
         `🚚 Add ₹${Math.max(150 - (totals?.subtotal || 0), 0)} more to get FREE delivery`
       )}
-    </div>
-  )}
+   
 </div>
 
 
