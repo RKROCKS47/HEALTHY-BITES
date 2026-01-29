@@ -38,33 +38,30 @@ export default function Cart() {
       <Navbar />
 
       <div
-  style={{
-    padding: isMobile ? "16px" : "28px 40px",
-    maxWidth: 1200,
-    margin: "0 auto",
-  }}
->
-  <h2 style={{ margin: 0 }}>Your Cart</h2>
+        style={{
+          padding: isMobile ? "16px" : "28px 40px",
+          maxWidth: 1200,
+          margin: "0 auto",
+        }}
+      >
+        <h2 style={{ margin: 0 }}>Your Cart</h2>
 
-  {/* Free delivery banner */}
-  {items.length > 0 && (
-    <div
-      style={{
-        marginTop: 12,
-        padding: 12,
-        borderRadius: 12,
-        background: "#f3fffa",
-        fontWeight: 800,
-      }}
-    >
-      {totals?.subtotal >= 150 ? (
-        "✅ Free delivery unlocked!"
-      ) : (
-        `🚚 Add ₹${Math.max(150 - (totals?.subtotal || 0), 0)} more to get FREE delivery`
-      )}
-    </div>
-  )}
-</div>
+        {/* Free delivery banner */}
+        {items.length > 0 && (
+          <div
+            style={{
+              marginTop: 12,
+              padding: 12,
+              borderRadius: 12,
+              background: "#f3fffa",
+              fontWeight: 800,
+            }}
+          >
+            {totals.subtotal >= 150
+              ? "✅ Free delivery unlocked!"
+              : `🚚 Add ₹${150 - totals.subtotal} more to get FREE delivery`}
+          </div>
+        )}
 
         {items.length === 0 ? (
           <div style={{ marginTop: 16 }}>
