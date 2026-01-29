@@ -51,7 +51,7 @@ export function CartProvider({ children }) {
       (sum, x) => sum + Number(x.price || 0) * Number(x.qty || 0),
       0
     );
-    const deliveryFee = subtotal > 0 ? 0 : 0; // change if needed
+    const deliveryFee = subtotal > 99 ? 0 : 25; // change if needed
     const total = subtotal + deliveryFee;
 
     return { subtotal, deliveryFee, total };
