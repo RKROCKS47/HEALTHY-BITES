@@ -14,7 +14,6 @@ import AdminProducts from "./pages/admin/AdminProducts";
 
 import { CartProvider } from "./context/CartContext";
 
-
 function App() {
   return (
     <CartProvider>
